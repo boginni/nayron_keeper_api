@@ -9,7 +9,8 @@ COPY pubspec.* ./
 RUN dart pub get
 
 # Copy the rest of the application code
-COPY lib .
+COPY lib lib
+COPY bin bin
 
 
 # Build the application
@@ -18,7 +19,7 @@ RUN dart compile exe bin/game_server.dart -o bin/game_server
 # Build minimal serving image from AOT-compiled `/server` and required system libraries and certificates
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin/
+COPY --from=build /app/bin/game_server /app/bin/
 
 # Include any assets or static files if needed
 # COPY --from=build /app/assets/ /app/assets/
@@ -27,4 +28,4 @@ COPY --from=build /app/bin/server /app/bin/
 EXPOSE 8080
 
 # Run the server
-CMD ["/app/bin/server"]
+CMD ["/app/bin/game_server"]
