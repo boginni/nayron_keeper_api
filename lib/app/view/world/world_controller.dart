@@ -1,10 +1,8 @@
-
 import 'package:nayron_keeper_api/app/domain/entity/event/mob_event.dart';
 import 'package:nayron_keeper_api/app/domain/repository/user_repository.dart';
 import '../../domain/entity/user_entity.dart';
 
 class WorldController {
-
   WorldController({
     required this.userRepository,
   });
@@ -23,5 +21,6 @@ class WorldController {
 
   void broadcastEvents() {
     events.forEach(userRepository.broadcastEvent);
+    events.clear();
   }
 }

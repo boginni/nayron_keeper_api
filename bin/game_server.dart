@@ -7,7 +7,6 @@ import 'package:nayron_keeper_api/app/view/game/game_controller.dart';
 import 'package:nayron_keeper_api/app/view/server_router.dart';
 import 'package:uuid/uuid.dart';
 
-
 void main() async {
   final eventRepository = EventRepository();
   final userRepository = UserRepository();
@@ -40,6 +39,8 @@ void main() async {
     connectionController: connectionController,
     authenticationController: authenticationController,
   );
-  gameController.start();
+
   server.start();
+
+  await Future.delayed(const Duration(seconds: 1), gameController.start);
 }
