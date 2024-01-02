@@ -12,7 +12,7 @@ class ServerRouter {
   final ConnectionController connectionController;
   final AuthenticationController authenticationController;
 
-  start() async {
+  void start() async {
     final server = await HttpServer.bind('127.0.0.1', 4040);
 
     print('Listening on localhost:${server.port}');
