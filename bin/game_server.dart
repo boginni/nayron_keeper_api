@@ -7,7 +7,6 @@ import 'package:nayron_keeper_api/app/view/game/game_controller.dart';
 import 'package:nayron_keeper_api/app/view/server_router.dart';
 import 'package:uuid/uuid.dart';
 
-import '../test/harness/app.dart';
 
 void main() async {
   final eventRepository = EventRepository();

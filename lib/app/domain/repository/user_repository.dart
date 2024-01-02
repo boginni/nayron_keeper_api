@@ -1,6 +1,4 @@
 import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
-import 'package:nayron_keeper_api/app/domain/entity/user_entity.dart';
-import 'package:nayron_keeper_api/app/domain/repository/authentication_repository.dart';
 import 'package:web_socket_channel/io.dart';
 
 class UserRepository {

@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
-import 'package:nayron_keeper_api/app/domain/entity/user_entity.dart';
 
 import '../factory/event_entity_factory.dart';
 
