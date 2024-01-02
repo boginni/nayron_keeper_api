@@ -4,7 +4,7 @@ import 'package:nayron_keeper_api/app/view/authentication/auth_controller.dart';
 import 'package:nayron_keeper_api/app/view/connection_controller.dart';
 
 class ServerRouter {
-  ServerRouter({
+  const ServerRouter({
     required this.connectionController,
     required this.authenticationController,
   });

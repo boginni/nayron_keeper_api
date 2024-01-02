@@ -62,6 +62,18 @@ class AuthenticationRepository {
     }
   }
 
+  Future<String> signUpAsGuest() async {
+    final user = UserEntity(
+      id: generator.v4(),
+      login: 'guest',
+      pass: generator.v4(),
+    );
+
+    _users.putIfAbsent(user.id, () => user);
+
+    return _getJwtToken(user);
+  }
+
   Future<void> signOut(String token) async {
     tokenBlackList.add(token);
   }
@@ -70,10 +82,8 @@ class AuthenticationRepository {
     required String login,
     required String pass,
   }) async {
-    final id = generator.v4();
-
     final user = UserEntity(
-      id: id,
+      id: generator.v4(),
       login: login,
       pass: pass,
     );
