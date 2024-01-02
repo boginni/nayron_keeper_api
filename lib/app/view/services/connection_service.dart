@@ -7,8 +7,9 @@ import 'package:web_socket_channel/io.dart';
 
 final channels = <String, IOWebSocketChannel>{};
 
-class ConnectionController {
-  const ConnectionController({
+class ConnectionService {
+
+  const ConnectionService({
     required this.userRepository,
     required this.eventRepository,
     required this.authenticationRepository,

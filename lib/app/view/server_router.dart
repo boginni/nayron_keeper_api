@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:nayron_keeper_api/app/view/authentication/auth_controller.dart';
-import 'package:nayron_keeper_api/app/view/connection_controller.dart';
+import 'package:nayron_keeper_api/app/view/services/authentication_service.dart';
+import 'package:nayron_keeper_api/app/view/services/connection_service.dart';
 
 class ServerRouter {
   const ServerRouter({
@@ -9,8 +9,8 @@ class ServerRouter {
     required this.authenticationController,
   });
 
-  final ConnectionController connectionController;
-  final AuthenticationController authenticationController;
+  final ConnectionService connectionController;
+  final AuthenticationService authenticationController;
 
   void start() async {
     final server = await HttpServer.bind('127.0.0.1', 4040);

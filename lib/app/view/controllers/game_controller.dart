@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
-import 'package:nayron_keeper_api/app/view/world/world_controller.dart';
+import 'package:nayron_keeper_api/app/view/controllers/world_controller.dart';
 
 import '../../domain/repository/event_repository.dart';
 import '../../domain/repository/user_repository.dart';

@@ -5,7 +5,9 @@ import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
 import '../factory/event_entity_factory.dart';
 
 class EventRepository {
-  final inputEventController = StreamController<EventEntity>();
+  EventRepository();
+
+  final _inputEventController = StreamController<EventEntity>();
 
   void receiveMessage(String rawMessage, String userId) {
     final event = EventEntityFactory.parseMessage(rawMessage, userId);
@@ -13,30 +15,14 @@ class EventRepository {
   }
 
   void addEvent(EventEntity message) {
-    inputEventController.add(message);
+    _inputEventController.add(message);
   }
 
   Stream<EventEntity> listenEvents() {
-    return inputEventController.stream;
+    return _inputEventController.stream;
   }
 
   void dispose() {
-    inputEventController.close();
-  }
-}
-
-class OutputRepository {
-  final outputEventController = StreamController<EventEntity>();
-
-  void addMessage(EventEntity message) {
-    outputEventController.add(message);
-  }
-
-  Stream<EventEntity> getOutputEvents() {
-    return outputEventController.stream;
-  }
-
-  void dispose() {
-    outputEventController.close();
+    _inputEventController.close();
   }
 }

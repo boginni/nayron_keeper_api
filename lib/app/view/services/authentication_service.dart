@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:nayron_keeper_api/app/domain/entity/auth_request_entity.dart';
 import 'package:nayron_keeper_api/app/domain/repository/authentication_repository.dart';
 
-abstract class IAuthController {
+abstract class IAuthenticationService {
   Future<void> signIn(HttpRequest req);
 
   Future<void> signInAsGuest(HttpRequest req);
@@ -13,8 +13,8 @@ abstract class IAuthController {
   Future<void> signOut(HttpRequest req);
 }
 
-class AuthenticationController implements IAuthController {
-  const AuthenticationController({
+class AuthenticationService implements IAuthenticationService {
+  const AuthenticationService({
     required this.authRepository,
   });
 
