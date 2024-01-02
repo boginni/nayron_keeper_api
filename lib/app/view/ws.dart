@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:nayron_keeper_api/app/view/connection_controller.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'game/game_controller.dart';
-
 
 class GameSocket {
   start() async {
@@ -11,12 +11,13 @@ class GameSocket {
 
     print('Listening on localhost:${server.port}');
 
-    final gameController = GameController();
+    final connectionController = ConnectionController();
 
     await for (HttpRequest req in server) {
+      //ignore: close_sinks
       final socket = await WebSocketTransformer.upgrade(req);
       final channel = IOWebSocketChannel(socket);
-      gameController.handleNewConnection(channel);
+      connectionController.handleNewConnection(channel);
     }
   }
 }

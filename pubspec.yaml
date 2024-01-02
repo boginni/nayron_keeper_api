@@ -9,6 +9,7 @@ environment:
 dependencies:
   conduit: ^4.3.7
   conduit_core: ^4.3.6
+  uuid: ^4.3.1
   vector_math: ^2.1.4
 
 dev_dependencies:

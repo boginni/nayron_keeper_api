@@ -1,26 +1,38 @@
-import 'package:web_socket_channel/io.dart';
+import 'dart:async';
+import 'dart:html';
 
-import '../world/world_controller.dart';
+import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
+import 'package:nayron_keeper_api/app/view/world/world_controller.dart';
+
+import '../../domain/repository/event_repository.dart';
+import '../../domain/repository/user_repository.dart';
 
 class GameController {
+  const GameController({
+    required this.eventRepository,
+    required this.userRepository,
+  });
 
-  GameController() {
-    worldController = WorldController(this);
-  }
+  final EventRepository eventRepository;
+  final UserRepository userRepository;
 
-  final channels = <IOWebSocketChannel>[];
-  late final WorldController worldController;
+  void start() {
+    final WorldController worldController = WorldController(
+      userRepository: userRepository,
+    );
 
-  void handleNewConnection(IOWebSocketChannel channel) {
-    channels.add(channel);
-    channel.stream.listen((message) {
-      worldController.handleGameEvent(message);
+    const tps = 20;
+    const msPerTick = 1000 ~/ tps;
+
+    Timer.periodic(const Duration(milliseconds: msPerTick), (timer) {
+      worldController.tick();
+      worldController.broadcastEvents();
     });
+
+    eventRepository.listenEvents().listen(onEvent);
   }
 
-  void broadcastMessage(String message) {
-    for (var channel in channels) {
-      channel.sink.add(message);
-    }
+  void onEvent(EventEntity event) {
+    print('onEvent: $event');
   }
 }
