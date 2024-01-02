@@ -4,9 +4,9 @@ import 'package:nayron_keeper_api/app/domain/repository/authentication_repositor
 import 'package:web_socket_channel/io.dart';
 
 class UserRepository {
-  UserRepository({required this.users});
+  UserRepository();
 
-  final Map<String, IOWebSocketChannel> users;
+  final Map<String, IOWebSocketChannel> users = {};
 
   void sendEvent(String userId, EventEntity event) async {
     users[userId]?.sink.add(event.toJson());

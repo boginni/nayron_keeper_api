@@ -1,49 +1,85 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:uuid/uuid.dart';
 
 import '../entity/user_entity.dart';
 
+final Map<String, UserEntity> _users = {};
+
+final tokenBlackList = <String>{};
+
 class AuthenticationRepository {
-  final generator = const Uuid();
-  static final Map<String, UserEntity> users = {};
+  const AuthenticationRepository({
+    required this.generator,
+    required this.jwtSecret,
+  });
 
-  Future<UserEntity> getUserById(String id) {
-    final user = users[id];
+  final Uuid generator;
+  final String jwtSecret;
 
-    if (user != null) {
-      return Future.value(user);
+  Future<UserEntity> getUserById(String id) async {
+    try {
+      return _users.values.firstWhere((element) => element.id == id);
+    } catch (e) {
+      throw Exception('User not found');
+    }
+  }
+
+  Future<UserEntity> getUserByToken(String token) {
+    if (tokenBlackList.contains(token)) {
+      throw Exception('Token is blacklisted');
+    }
+
+    final jwt = JWT.verify(token, SecretKey(jwtSecret));
+    final userId = jwt.payload['userId']?.toString();
+
+    if (userId != null) {
+      return getUserById(userId);
     } else {
       throw Exception('User not found');
     }
   }
 
-  Future<String> signInWithPassword({
+  String _getJwtToken(UserEntity user) {
+    final jwt = JWT(
+      user.geJwtPayload(),
+      // issuer: 'your_issuer',
+      // subject: user.login,
+    );
+
+    return jwt.sign(SecretKey(jwtSecret));
+  }
+
+  Future<String> signIn({
     required String login,
     required String pass,
-  }) {
-    final user = users[login];
+  }) async {
+    final user = _users[login];
 
     if (user != null && user.pass == pass) {
-      return Future.value(user.id);
+      return _getJwtToken(user);
     } else {
       throw Exception('User not found');
     }
+  }
+
+  Future<void> signOut(String token) async {
+    tokenBlackList.add(token);
   }
 
   Future<String> signUp({
     required String login,
     required String pass,
-  }) {
-    if (users.containsValue(login)) {
-      throw Exception('User already exists');
-    } else {
-      final id = generator.v4();
-      final user = UserEntity(
-        id: id,
-        login: login,
-        pass: pass,
-      );
-      users.putIfAbsent(id, () => user);
-      return Future.value(id);
-    }
+  }) async {
+    final id = generator.v4();
+
+    final user = UserEntity(
+      id: id,
+      login: login,
+      pass: pass,
+    );
+
+    _users.putIfAbsent(login, () => user);
+
+    return _getJwtToken(user);
   }
 }

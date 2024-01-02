@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:nayron_keeper_api/app/domain/entity/event/event_entity.dart';
 import 'package:nayron_keeper_api/app/view/world/world_controller.dart';
@@ -8,7 +7,7 @@ import '../../domain/repository/event_repository.dart';
 import '../../domain/repository/user_repository.dart';
 
 class GameController {
-  const GameController({
+  GameController({
     required this.eventRepository,
     required this.userRepository,
   });
@@ -17,6 +16,8 @@ class GameController {
   final UserRepository userRepository;
 
   void start() {
+    print('starting');
+
     final WorldController worldController = WorldController(
       userRepository: userRepository,
     );
@@ -24,7 +25,8 @@ class GameController {
     const tps = 20;
     const msPerTick = 1000 ~/ tps;
 
-    Timer.periodic(const Duration(milliseconds: msPerTick), (timer) {
+    final tick =
+        Timer.periodic(const Duration(milliseconds: msPerTick), (timer) {
       worldController.tick();
       worldController.broadcastEvents();
     });

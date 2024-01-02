@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:nayron_keeper_api/app/domain/entity/event/player_event.dart';
 
 import '../entity/event/chat_event.dart';
@@ -18,6 +20,12 @@ sealed class EventEntityFactory {
       case EventType.mob_event:
         return MobEventFactory.getInstance(json);
     }
+  }
+
+  static EventEntity parseMessage(String rawMessage, String userId) {
+    final Map<String, dynamic> json = jsonDecode(rawMessage);
+    json['userId'] = userId;
+    return EventEntityFactory.getInstance(json);
   }
 }
 
