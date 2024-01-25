@@ -14,4 +14,10 @@ class UserEntity {
       'userId': id,
     };
   }
+
+  Object? toJson() {
+    return {
+      'login': login,
+    };
+  }
 }

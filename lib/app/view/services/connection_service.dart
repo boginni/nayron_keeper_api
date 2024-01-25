@@ -8,7 +8,6 @@ import 'package:web_socket_channel/io.dart';
 final channels = <String, IOWebSocketChannel>{};
 
 class ConnectionService {
-
   const ConnectionService({
     required this.userRepository,
     required this.eventRepository,
@@ -19,7 +18,7 @@ class ConnectionService {
   final AuthenticationRepository authenticationRepository;
   final UserRepository userRepository;
 
-  void handleNewConnection(HttpRequest req) async {
+  Future<void> handleNewConnection(HttpRequest req) async {
     final token = req.uri.queryParameters['token'];
 
     if (token == null) {

@@ -11,12 +11,17 @@ class WorldController {
 
   final users = List<UserEntity>;
 
-  final mobs = [];
+  final mobs = [
+    //
+    //
+    //
+
+  ];
 
   final events = <MobEventModel>[];
 
   void tick() {
-    /// do mobs logic
+
   }
 
   void broadcastEvents() {

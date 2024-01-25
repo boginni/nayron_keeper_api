@@ -20,6 +20,10 @@ class AuthenticationService implements IAuthenticationService {
 
   final AuthenticationRepository authRepository;
 
+  String getAuthorizationToken(HttpRequest req) {
+    return req.headers['Authorization'].toString().split(' ')[1];
+  }
+
   @override
   Future<void> signIn(HttpRequest req) async {
     try {
@@ -66,14 +70,29 @@ class AuthenticationService implements IAuthenticationService {
 
   @override
   Future<void> signOut(HttpRequest req) async {
-    final token = req.uri.queryParameters['token'];
-
     try {
-      if (token == null) {
-        throw Exception();
-      }
+      final token = getAuthorizationToken(req);
 
       await authRepository.signOut(token);
+    } catch (e) {
+      final response = req.response;
+      response.statusCode = HttpStatus.badRequest;
+
+      return response.close();
+    }
+  }
+
+  Future<void> getCurrentUser(HttpRequest req) async {
+    try {
+      final token = getAuthorizationToken(req);
+
+      final user = await authRepository.getUserByToken(token);
+
+      final response = req.response;
+      response.statusCode = HttpStatus.ok;
+      response.write(user.toJson());
+
+      await response.close();
     } catch (e) {
       final response = req.response;
       response.statusCode = HttpStatus.badRequest;

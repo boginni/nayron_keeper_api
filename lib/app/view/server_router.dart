@@ -20,7 +20,7 @@ class ServerRouter {
     await for (HttpRequest req in server) {
       switch (req.uri.path) {
         case '/ws':
-          connectionController.handleNewConnection(req);
+          await connectionController.handleNewConnection(req);
           break;
         case '/sign-in':
           await authenticationController.signIn(req);
@@ -30,6 +30,9 @@ class ServerRouter {
           break;
         case '/sign-out':
           await authenticationController.signOut(req);
+          break;
+        case '/current-user':
+          await authenticationController.getCurrentUser(req);
           break;
         default:
           req.response.statusCode = HttpStatus.notFound;
