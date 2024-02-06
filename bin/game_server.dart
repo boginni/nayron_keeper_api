@@ -1,46 +1,30 @@
-import 'package:nayron_keeper_api/app/domain/repository/authentication_repository.dart';
-import 'package:nayron_keeper_api/app/domain/repository/event_repository.dart';
-import 'package:nayron_keeper_api/app/domain/repository/user_repository.dart';
-import 'package:nayron_keeper_api/app/view/controllers/game_controller.dart';
-import 'package:nayron_keeper_api/app/view/server_router.dart';
-import 'package:nayron_keeper_api/app/view/services/authentication_service.dart';
-import 'package:nayron_keeper_api/app/view/services/connection_service.dart';
-import 'package:uuid/uuid.dart';
+import 'dart:io';
 
-void main() async {
-  final eventRepository = EventRepository();
-  final userRepository = UserRepository();
+import 'package:watcher/watcher.dart';
 
-  const generator = Uuid();
+void main(List<String> arguments) async {
+  const path = './lib'; // Set this to your project's path
+  startServer();
 
-  final authenticationRepository = AuthenticationRepository(
-    generator: generator,
-    jwtSecret: generator.v4(),
-  );
+  // Watching the entire project directory
+  final watcher = DirectoryWatcher(path);
+  await for (var event in watcher.events) {
+    print('Change detected: ${event.path}');
+    restartServer();
+  }
+}
 
-  final connectionController = ConnectionService(
-    userRepository: userRepository,
-    eventRepository: eventRepository,
-    authenticationRepository: authenticationRepository,
-  );
+Process? _process;
 
-  final authenticationController = AuthenticationService(
-    authRepository: authenticationRepository,
-  );
+void startServer() async {
+  _process = await Process.start('dart', ['run', './bin/game_server.dart']);
+  _process?.stdout.transform(const SystemEncoding().decoder).listen(print);
+  _process?.stderr.transform(const SystemEncoding().decoder).listen((data) {
+    print('Error: $data');
+  });
+}
 
-  final gameController = GameController(
-    eventRepository: eventRepository,
-    userRepository: userRepository,
-  );
-
-  //
-
-  final server = ServerRouter(
-    connectionController: connectionController,
-    authenticationController: authenticationController,
-  );
-
-  server.start();
-
-  await Future.delayed(const Duration(seconds: 1), gameController.start);
+void restartServer() {
+  _process?.kill();
+  startServer();
 }
